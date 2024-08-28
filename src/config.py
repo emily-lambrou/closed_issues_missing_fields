@@ -34,14 +34,14 @@ GRAPHQL_HEADERS = {
 }
 
 
-# Define the required fields and their types
+# Define required fields and their types
 required_fields = {
-    status_field_name: 'single_select',
-    duedate_field_name: 'date',
-    timespent_field_name: 'text',
-    release_field_name: 'single_select',
-    estimate_field_name: 'text',
-    priority_field_name: 'single_select',
-    size_field_name: 'single_select',
-    week_field_name: 'iteration'
+    'Status': 'single_select',
+    'Due Date': 'date',
+    'Time Spent': 'text',
+    'Release': 'single_select',
+    'Estimate': 'text',
+    'Priority': 'single_select',
+    'Size': 'single_select',
+    'Week': 'iteration'
 }
