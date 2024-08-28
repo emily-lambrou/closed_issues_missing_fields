@@ -1,5 +1,5 @@
-name: "Missing required information Notification"
-description: "Notify when project's required information for a closed issue are missing"
+name: "Missing Fields In Project"
+description: "Notify when project's required information are missing"
 author: "Emily Lambrou"
 branding:
   icon: 'notification'
