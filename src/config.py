@@ -32,3 +32,16 @@ GRAPHQL_HEADERS = {
     'Authorization': f'Bearer {gh_token}',
     'Content-Type': 'application/json'
 }
+
+
+# Define the required fields and their types
+required_fields = {
+    status_field_name: 'single_select',
+    duedate_field_name: 'date',
+    timespent_field_name: 'text',
+    release_field_name: 'single_select',
+    estimate_field_name: 'text',
+    priority_field_name: 'single_select',
+    size_field_name: 'single_select',
+    week_field_name: 'iteration'
+}
