@@ -27,12 +27,12 @@ notification_type = os.environ['INPUT_NOTIFICATION_TYPE']
 if notification_type not in ['comment', 'email']:
     raise Exception(f'Unsupported notification type {notification_type}')
 
-GRAPHQL_ENDPOINT = api_endpoint
+# Other environment variables
+GRAPHQL_ENDPOINT = os.environ.get('GITHUB_GRAPHQL_URL', 'https://github.intranet.unicaf.org/api/graphql')
 GRAPHQL_HEADERS = {
-    'Authorization': f'Bearer {gh_token}',
+    'Authorization': f'Bearer {os.environ["INPUT_GH_TOKEN"]}',
     'Content-Type': 'application/json'
 }
-
 
 # Define required fields and their types
 required_fields = {
