@@ -6,7 +6,7 @@ from config import GRAPHQL_ENDPOINT, GRAPHQL_HEADERS, required_fields
 def fetch_closed_issues():
     query = """
     query {
-        repository(owner: "%s", name: "%s") {
+        repository(owner: $owner, name: $repo) {
             issues(first: 100, states: [CLOSED]) {
                 nodes {
                     id
