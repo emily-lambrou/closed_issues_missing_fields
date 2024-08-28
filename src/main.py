@@ -1,11 +1,11 @@
 import os
 import requests
 import json
-from config import GRAPHQL_ENDPOINT, GRAPHQL_HEADERS, required_fields
+from config import GRAPHQL_ENDPOINT, GRAPHQL_HEADERS, required_fields, repository_owner, repository_name
 
 def fetch_closed_issues():
     query = """
-    query {
+    query($owner: String!, $repo: String!) {
         repository(owner: $owner, name: $repo) {
             issues(first: 100, states: [CLOSED]) {
                 nodes {
@@ -49,9 +49,12 @@ def fetch_closed_issues():
             }
         }
     }
-    """ % (repository_owner, repository_name)
-
-    response = requests.post(GRAPHQL_ENDPOINT, headers=GRAPHQL_HEADERS, json={'query': query})
+    """
+    variables = {
+        'owner': repository_owner,
+        'repo': repository_name
+    }
+    response = requests.post(GRAPHQL_ENDPOINT, headers=GRAPHQL_HEADERS, json={'query': query, 'variables': variables})
     response.raise_for_status()
     data = response.json()
     issues = data.get('data', {}).get('repository', {}).get('issues', {}).get('nodes', [])
