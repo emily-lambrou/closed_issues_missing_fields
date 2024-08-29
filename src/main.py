@@ -4,10 +4,10 @@ import json
 # Load configuration
 from config import *
 
-# Updated GraphQL query to retrieve fields directly from the ProjectV2
+# Updated GraphQL query to retrieve fields directly from the organization or user ProjectV2
 query = """
-query($owner: String!, $repo: String!, $projectNumber: Int!) {
-  repository(owner: $owner, name: $repo) {
+query($owner: String!, $projectNumber: Int!) {
+  organization(login: $owner) {
     projectV2(number: $projectNumber) {
       id
       title
@@ -36,10 +36,9 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-def fetch_project_fields(owner, repo, project_number):
+def fetch_project_fields(owner, project_number):
     variables = {
         "owner": owner,
-        "repo": repo,
         "projectNumber": project_number,
     }
 
@@ -67,10 +66,10 @@ def fetch_project_fields(owner, repo, project_number):
 
 def check_project_fields():
     # Fetch fields for the specific project
-    data = fetch_project_fields(repository_owner, repository_name, project_number)
+    data = fetch_project_fields(repository_owner, project_number)
 
     if data and 'data' in data:
-        project = data['data']['repository']['projectV2']
+        project = data['data']['organization']['projectV2']
         fields = project['fields']['nodes']
 
         print(f"Fields for Project '{project['title']}':")
