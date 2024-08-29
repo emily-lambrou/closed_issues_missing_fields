@@ -4,45 +4,27 @@ import json
 # Load configuration
 from config import *
 
-# Updated GraphQL query with the correct fields for retrieving project card information
+# Updated GraphQL query to retrieve fields directly from the ProjectV2
 query = """
-query($owner: String!, $repo: String!, $after: String) {
+query($owner: String!, $repo: String!, $projectNumber: Int!) {
   repository(owner: $owner, name: $repo) {
-    issues(states: CLOSED, first: 100, after: $after) {
-      nodes {
-        id
-        title
-        projectCards(first: 100) {
-          nodes {
-            id
-            note
-            project {
+    projectV2(number: $projectNumber) {
+      id
+      title
+      fields(first: 100) {
+        nodes {
+          id
+          name
+          ... on ProjectV2FieldCommon {
+            dataType
+          }
+          ... on ProjectV2SingleSelectField {
+            options {
               id
               name
             }
-            column {
-              id
-              name
-            }
-            fieldValues(first: 100) {
-              nodes {
-                field {
-                  name
-                }
-                value
-              }
-            }
           }
         }
-        comments(first: 100) {
-          nodes {
-            body
-          }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
       }
     }
   }
@@ -54,11 +36,11 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-def fetch_issues(owner, repo, after=None):
+def fetch_project_fields(owner, repo, project_number):
     variables = {
         "owner": owner,
         "repo": repo,
-        "after": after
+        "projectNumber": project_number,
     }
 
     response = requests.post(
@@ -80,53 +62,26 @@ def fetch_issues(owner, repo, after=None):
         return response_data
 
     else:
-        print(f"Error fetching issues: {response.status_code} - {response.text}")
+        print(f"Error fetching project fields: {response.status_code} - {response.text}")
         return None
 
-def check_issues():
-    # Initialize pagination variables
-    after_cursor = None
-    all_issues = []
+def check_project_fields():
+    # Fetch fields for the specific project
+    data = fetch_project_fields(repository_owner, repository_name, project_number)
 
-    while True:
-        # Call fetch_issues with your repository owner, name, and pagination cursor
-        data = fetch_issues(repository_owner, repository_name, after_cursor)
+    if data and 'data' in data:
+        project = data['data']['repository']['projectV2']
+        fields = project['fields']['nodes']
 
-        if data and 'data' in data:
-            issues = data['data']['repository']['issues']['nodes']
-            all_issues.extend(issues)
-
-            # Check if there are more pages
-            page_info = data['data']['repository']['issues']['pageInfo']
-            if page_info['hasNextPage']:
-                after_cursor = page_info['endCursor']
-            else:
-                break  # No more pages
-
-        else:
-            print("No data received from the API.")
-            break
-
-    for issue in all_issues:
-        comments = issue['comments']['nodes']
-        if not comment_exists(comments):
-            missing_fields = []
-            project_cards = issue['projectCards']['nodes']
-            
-            for card in project_cards:
-                field_values = [fv['field']['name'] for fv in card['fieldValues']['nodes']]
-                
-                required_fields = [status_field_name, duedate_field_name, timespent_field_name,
-                                   release_field_name, estimate_field_name, priority_field_name,
-                                   size_field_name, week_field_name]
-
-                for field in required_fields:
-                    if field not in field_values:
-                        missing_fields.append(field)
-                
-                if missing_fields:
-                    print(f"Issue ID: {issue['id']} has missing fields: {missing_fields}")
-                    add_comment(issue['id'])
+        print(f"Fields for Project '{project['title']}':")
+        for field in fields:
+            print(f"- {field['name']} (ID: {field['id']}, Type: {field['dataType']})")
+            if 'options' in field:
+                print("  Options:")
+                for option in field['options']:
+                    print(f"  - {option['name']} (ID: {option['id']})")
+    else:
+        print("No data received from the API.")
 
 if __name__ == "__main__":
-    check_issues()
+    check_project_fields()
