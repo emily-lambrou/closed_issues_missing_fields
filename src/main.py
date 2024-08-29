@@ -58,16 +58,26 @@ def fetch_issues(owner, repo):
     )
 
     if response.status_code == 200:
-        return response.json()
+        response_data = response.json()
+        
+        # Check if the response contains errors
+        if 'errors' in response_data:
+            print("GraphQL errors occurred:")
+            for error in response_data['errors']:
+                print(error['message'])
+            return None
+
+        return response_data
+
     else:
-        print(f"Error fetching issues: {response.text}")
+        print(f"Error fetching issues: {response.status_code} - {response.text}")
         return None
 
 def check_issues():
     # Call fetch_issues with your repository owner and name
     data = fetch_issues(repository_owner, repository_name)
 
-    if data:
+    if data and 'data' in data:  # Ensure 'data' key is present
         for issue in data['data']['repository']['issues']['nodes']:
             comments = issue['comments']['nodes']
             if not comment_exists(comments):
@@ -86,6 +96,8 @@ def check_issues():
                 if missing_fields:
                     print(f"Issue ID: {issue['id']} has missing fields: {missing_fields}")
                     add_comment(issue['id'])
+    else:
+        print("No data received from the API.")
 
 if __name__ == "__main__":
     check_issues()
