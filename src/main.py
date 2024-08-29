@@ -4,27 +4,32 @@ import json
 # Load configuration
 from config import *
 
-# Define the GraphQL query with variables
+# Updated GraphQL query with the correct fields for retrieving project card information
 query = """
-query($owner: String!, $repo: String!) {
+query($owner: String!, $repo: String!, $after: String) {
   repository(owner: $owner, name: $repo) {
-    issues(states: CLOSED, first: 100) {
+    issues(states: CLOSED, first: 100, after: $after) {
       nodes {
         id
         title
         projectCards(first: 100) {
           nodes {
+            id
+            note
             project {
-              fields {
-                name
-              }
-              items {
-                fieldValues {
-                  field {
-                    name
-                  }
-                  value
+              id
+              name
+            }
+            column {
+              id
+              name
+            }
+            fieldValues(first: 100) {
+              nodes {
+                field {
+                  name
                 }
+                value
               }
             }
           }
@@ -34,6 +39,10 @@ query($owner: String!, $repo: String!) {
             body
           }
         }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
@@ -45,10 +54,11 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-def fetch_issues(owner, repo):
+def fetch_issues(owner, repo, after=None):
     variables = {
         "owner": owner,
-        "repo": repo
+        "repo": repo,
+        "after": after
     }
 
     response = requests.post(
@@ -59,7 +69,7 @@ def fetch_issues(owner, repo):
 
     if response.status_code == 200:
         response_data = response.json()
-        
+
         # Check if the response contains errors
         if 'errors' in response_data:
             print("GraphQL errors occurred:")
@@ -74,21 +84,42 @@ def fetch_issues(owner, repo):
         return None
 
 def check_issues():
-    # Call fetch_issues with your repository owner and name
-    data = fetch_issues(repository_owner, repository_name)
+    # Initialize pagination variables
+    after_cursor = None
+    all_issues = []
 
-    if data and 'data' in data:  # Ensure 'data' key is present
-        for issue in data['data']['repository']['issues']['nodes']:
-            comments = issue['comments']['nodes']
-            if not comment_exists(comments):
-                missing_fields = []
-                project_fields = [field['name'] for field in issue['projectCards']['nodes'][0]['project']['fields']]
-                field_values = [value['field']['name'] for value in issue['projectCards']['nodes'][0]['project']['items'][0]['fieldValues']]
+    while True:
+        # Call fetch_issues with your repository owner, name, and pagination cursor
+        data = fetch_issues(repository_owner, repository_name, after_cursor)
+
+        if data and 'data' in data:
+            issues = data['data']['repository']['issues']['nodes']
+            all_issues.extend(issues)
+
+            # Check if there are more pages
+            page_info = data['data']['repository']['issues']['pageInfo']
+            if page_info['hasNextPage']:
+                after_cursor = page_info['endCursor']
+            else:
+                break  # No more pages
+
+        else:
+            print("No data received from the API.")
+            break
+
+    for issue in all_issues:
+        comments = issue['comments']['nodes']
+        if not comment_exists(comments):
+            missing_fields = []
+            project_cards = issue['projectCards']['nodes']
+            
+            for card in project_cards:
+                field_values = [fv['field']['name'] for fv in card['fieldValues']['nodes']]
                 
                 required_fields = [status_field_name, duedate_field_name, timespent_field_name,
                                    release_field_name, estimate_field_name, priority_field_name,
                                    size_field_name, week_field_name]
-                
+
                 for field in required_fields:
                     if field not in field_values:
                         missing_fields.append(field)
@@ -96,8 +127,6 @@ def check_issues():
                 if missing_fields:
                     print(f"Issue ID: {issue['id']} has missing fields: {missing_fields}")
                     add_comment(issue['id'])
-    else:
-        print("No data received from the API.")
 
 if __name__ == "__main__":
     check_issues()
