@@ -47,7 +47,7 @@ def get_repo_closed_issues(owner, repository, after=None, issues=None):
         'after': after
     }
 
-     response = requests.post(
+    response = requests.post(
         config.api_endpoint,
         json={"query": query, "variables": variables},
         headers={"Authorization": f"Bearer {config.gh_token}"}
