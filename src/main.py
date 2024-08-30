@@ -129,8 +129,8 @@ def notify_missing_timespent():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
@@ -184,8 +184,8 @@ def notify_missing_release():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
@@ -240,8 +240,8 @@ def notify_missing_estimate():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
@@ -295,8 +295,8 @@ def notify_missing_priority():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
@@ -337,7 +337,6 @@ def notify_missing_priority():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
       
-
 def notify_missing_size():
     issues = graphql.get_project_issues_size(
         owner=config.repository_owner,
@@ -352,8 +351,8 @@ def notify_missing_size():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
@@ -407,8 +406,8 @@ def notify_missing_week():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
