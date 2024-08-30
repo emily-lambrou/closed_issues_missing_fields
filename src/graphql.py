@@ -748,6 +748,8 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
                   fieldValueByName(name: $week) {{
                     ... on ProjectV2IterationFieldValue {{
                       title
+                      startDate
+                      endDate
                     }}
                   }}
                   content {{
