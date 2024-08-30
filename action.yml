@@ -42,10 +42,6 @@ inputs:
     description: "The field name for the size"
     required: true
     default: 'Size'
-  week_field_name:
-    description: "The field name for the size"
-    required: true
-    default: 'Week'
   notification_type:
     description: "The type of notification (comment,email)"
     required: true
