@@ -782,7 +782,7 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
     variables = {
         'owner': owner,
         'projectNumber': project_number,
-        'size': size_field_name,
+        'week': week_field_name,
         'after': after
     }
 
