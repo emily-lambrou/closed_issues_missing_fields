@@ -15,7 +15,7 @@ def notify_missing_status():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -77,7 +77,7 @@ def notify_missing_duedate():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -141,7 +141,7 @@ def notify_missing_timespent():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -203,7 +203,7 @@ def notify_missing_release():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -266,7 +266,7 @@ def notify_missing_estimate():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -328,7 +328,7 @@ def notify_missing_priority():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -391,7 +391,7 @@ def notify_missing_size():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
@@ -453,7 +453,7 @@ def notify_missing_week():
         )
     else:
         # Get the issues
-        issues = graphql.get_repo_issues(
+        issues = graphql.get_repo_closed_issues(
             owner=config.repository_owner,
             repository=config.repository_name
         )
