@@ -1,4 +1,3 @@
-import smtplib
 import graphql
 import config
 from logger import logger
