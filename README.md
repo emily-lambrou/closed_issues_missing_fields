@@ -5,15 +5,19 @@ GitHub Action aims to address this by allowing you to identify the missing infor
 
 ## Introduction
 
-//
+This GitHub Action allows you to identify missing fields in a central GitHub project on closed issues. If at least one of the fields are missing,
+then the assignees of the issue will be informed via comment to fill all the required fields for the project. 
+
 
 ### Prerequisites
 
 Before you can start using this GitHub Action, you'll need to ensure you have the following:
 
 1. A GitHub repository where you want to enable this action.
-2. A GitHub project board with a custom status field added.
-3. A Token (Classic) with permissions to repo:*, read:user, user:email, read:project
+2. A GitHub project board with custom "Status" field, "Due Date", "Time Spent", "Release", "Estimate", "Priority", "Size", and "Week" added.
+3. Status field, Release field, Priority field and Size fields should be "Single select" types, "Due Date" field should be "Date" type, "Time Spent" and "Estimate" should be "Text" type
+   and "Week" should be "Iteration" type.
+5. A Token (Classic) with permissions to repo:*, read:user, user:email, read:project
 
 ### Inputs
 
