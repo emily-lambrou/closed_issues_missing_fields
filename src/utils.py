@@ -2,7 +2,7 @@ import smtplib
 import graphql
 import config
 
-def prepare_missing_duedate_comment(issue: dict, assignees: dict):
+def prepare_missing_fields_comment(issue: dict, assignees: dict):
     """
     Prepare the comment from the given arguments and return it
     """
