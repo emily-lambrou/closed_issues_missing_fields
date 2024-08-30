@@ -60,7 +60,7 @@ def notify_missing_duedate():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):
@@ -99,7 +99,7 @@ def notify_missing_timespent():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
@@ -136,7 +136,7 @@ def notify_missing_release():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
@@ -174,7 +174,7 @@ def notify_missing_estimate():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
@@ -211,7 +211,7 @@ def notify_missing_priority():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
@@ -250,7 +250,7 @@ def notify_missing_size():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
@@ -288,7 +288,7 @@ def notify_missing_week():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        comment_text = f"Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
         if not utils.check_comment_exists(issue_id, comment_text):   
