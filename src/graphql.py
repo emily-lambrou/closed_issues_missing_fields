@@ -55,46 +55,56 @@ def get_project_issues_status(owner, owner_type, project_number, status_field_na
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_status') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_status(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            status_field_name=status_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
 
-    return issues
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_status') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_status(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                status_field_name=status_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return []
 
 def get_project_issues_duedate(owner, owner_type, project_number, duedate_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -149,46 +159,56 @@ def get_project_issues_duedate(owner, owner_type, project_number, duedate_field_
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_duedate') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_duedate(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            duedate_field_name=duedate_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
 
-    return issues
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_duedate') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_duedate(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                duedate_field_name=duedate_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return []
 
 def get_project_issues_timespent(owner, owner_type, project_number, timespent_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -243,46 +263,56 @@ def get_project_issues_timespent(owner, owner_type, project_number, timespent_fi
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_timespent') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_timespent(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            timespent_field_name=timespent_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
 
-    return issues
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_timespent') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_timespent(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                timespent_field_name=timespent_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+            logging.error(f"Request error: {e}")
+            return []
 
 def get_project_issues_release(owner, owner_type, project_number, release_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -337,46 +367,57 @@ def get_project_issues_release(owner, owner_type, project_number, release_field_
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_release') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_release(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            release_field_name=release_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
+    
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_release') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
 
-    return issues
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_release(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                release_field_name=release_field_name
+            )
+            
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return []
+
 
 def get_project_issues_estimate(owner, owner_type, project_number, estimate_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -431,46 +472,57 @@ def get_project_issues_estimate(owner, owner_type, project_number, estimate_fiel
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_estimate') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_estimate(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            estimate_field_name=estimate_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
 
-    return issues
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_estimate') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_estimate(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                estimate_field_name=estimate_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return []
+
 
 def get_project_issues_priority(owner, owner_type, project_number, priority_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -565,7 +617,10 @@ def get_project_issues_priority(owner, owner_type, project_number, priority_fiel
         )
 
     return issues
-
+  except requests.RequestException as e:
+    logging.error(f"Request error: {e}")
+    return
+       
 
 def get_project_issues_size(owner, owner_type, project_number, size_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -620,47 +675,56 @@ def get_project_issues_size(owner, owner_type, project_number, size_field_name, 
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_size') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_size(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            size_field_name=size_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
 
-    return issues
-
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_size') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_size(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                size_field_name=size_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return
 
 def get_project_issues_week(owner, owner_type, project_number, week_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -714,47 +778,56 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
         'after': after
     }
 
-    response = requests.post(
-        config.api_endpoint,
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.gh_token}"}
-    )
-
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    pageinfo = response.json().get('data').get(owner_type).get('projectV2').get('items').get('pageInfo')
-    if issues is None:
-        issues = []
-
-    nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-
-    if filters:
-        filtered_issues = []
-        for node in nodes:
-            if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
-                continue
-            if filters.get('empty_week') and node['fieldValueByName']:
-                continue
-            filtered_issues.append(node)
-
-        nodes = filtered_issues
-
-    issues = issues + nodes
-
-    if pageinfo.get('hasNextPage'):
-        return get_project_issues_week(
-            owner=owner,
-            owner_type=owner_type,
-            project_number=project_number,
-            after=pageinfo.get('endCursor'),
-            filters=filters,
-            issues=issues,
-            week_field_name=week_field_name
+    try:
+        response = requests.post(
+            config.api_endpoint,
+            json={"query": query, "variables": variables},
+            headers={"Authorization": f"Bearer {config.gh_token}"}
         )
-
-    return issues
-
+    
+        data = response.json()
+    
+        if 'errors' in data:
+            logging.error(f"GraphQL query errors: {data['errors']}")
+            return []
+          
+        owner_data = data.get('data', {}).get(owner_type, {})
+        project_data = owner_data.get('projectV2', {})
+        items_data = project_data.get('items', {})
+        pageinfo = items_data.get('pageInfo', {})
+        nodes = items_data.get('nodes', [])
+    
+        if issues is None:
+            issues = []
+            
+        if filters:
+            filtered_issues = []
+            for node in nodes:
+                if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
+                    continue
+                if filters.get('empty_week') and node['fieldValueByName']:
+                    continue
+                filtered_issues.append(node)
+    
+            nodes = filtered_issues
+    
+        issues = issues + nodes
+    
+        if pageinfo.get('hasNextPage'):
+            return get_project_issues_week(
+                owner=owner,
+                owner_type=owner_type,
+                project_number=project_number,
+                after=pageinfo.get('endCursor'),
+                filters=filters,
+                issues=issues,
+                week_field_name=week_field_name
+            )
+    
+        return issues
+    except requests.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return
 
 def add_issue_comment(issueId, comment):
     mutation = """
