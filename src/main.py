@@ -4,7 +4,7 @@ import utils
 import graphql
 
 def notify_missing_status():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_status(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -41,7 +41,7 @@ def notify_missing_status():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
 
 def notify_missing_duedate():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_duedate(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -80,7 +80,7 @@ def notify_missing_duedate():
 
 
 def notify_missing_timespent():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_timespent(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -117,7 +117,7 @@ def notify_missing_timespent():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
 def notify_missing_release():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_release(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -155,7 +155,7 @@ def notify_missing_release():
           
       
 def notify_missing_estimate():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_estimate(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -192,7 +192,7 @@ def notify_missing_estimate():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
 def notify_missing_priority():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_priority(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -231,7 +231,7 @@ def notify_missing_priority():
       
 
 def notify_missing_size():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_size(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
@@ -268,9 +268,8 @@ def notify_missing_size():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
       
-
 def notify_missing_week():
-    issues = graphql.get_project_issues(
+    issues = graphql.get_project_issues_week(
         owner=config.repository_owner,
         owner_type=config.repository_owner_type,
         project_number=config.project_number,
