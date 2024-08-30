@@ -72,8 +72,8 @@ def notify_missing_duedate():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
-     for issue in issues:
+    # Loop through issues
+    for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
             continue
