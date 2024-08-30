@@ -392,62 +392,7 @@ def notify_missing_size():
     
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
-      
-def notify_missing_week():
-    issues = graphql.get_project_issues_week(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        week_field_name=config.week_field_name,
-        filters={'empty_week': True, 'closed_only': True}
-    )
-
-    # Check if there are issues available
-    if not issues:
-        logger.info('No issues has been found')
-        return
-
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
-
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
-
-        comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
-        
-        # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
-            if config.notification_type == 'comment':
-                # Prepare the notification content
-                comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
-                )
     
-                if not config.dry_run:
-                    # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-          
 def main():
     logger.info('Process started...')
     if config.dry_run:
@@ -460,7 +405,6 @@ def main():
     notify_missing_estimate()
     notify_missing_priority()
     notify_missing_size()
-    notify_missing_week()
   
 
 if __name__ == "__main__":
