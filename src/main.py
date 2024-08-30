@@ -23,18 +23,22 @@ def notify_missing_status():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        if config.notification_type == 'comment':
-            # Prepare the notification content
-            comment = utils.prepare_missing_fields_comment(
-                issue=issue,
-                assignees=assignees,
-            )
-
-            if not config.dry_run:
-                # Add the comment to the issue
-                graphql.add_issue_comment(issue['id'], comment)
-
-            logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
+        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        
+        # Check if the comment already exists
+        if not utils.check_comment_exists(issue_id, comment_text):
+            if config.notification_type == 'comment':
+                # Prepare the notification content
+                comment = utils.prepare_missing_fields_comment(
+                    issue=issue,
+                    assignees=assignees,
+                )
+    
+                if not config.dry_run:
+                    # Add the comment to the issue
+                    graphql.add_issue_comment(issue['id'], comment)
+    
+                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
 
 def notify_missing_duedate():
     issues = graphql.get_project_issues(
@@ -56,18 +60,23 @@ def notify_missing_duedate():
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
 
-        if config.notification_type == 'comment':
-            # Prepare the notification content
-            comment = utils.prepare_missing_fields_comment(
-                issue=issue,
-                assignees=assignees,
-            )
+        comment_text = ""Please fill all the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.""
+        
+        # Check if the comment already exists
+        if not utils.check_comment_exists(issue_id, comment_text):
 
-            if not config.dry_run:
-                # Add the comment to the issue
-                graphql.add_issue_comment(issue['id'], comment)
-
-            logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
+            if config.notification_type == 'comment':
+                # Prepare the notification content
+                comment = utils.prepare_missing_fields_comment(
+                    issue=issue,
+                    assignees=assignees,
+                )
+    
+                if not config.dry_run:
+                    # Add the comment to the issue
+                    graphql.add_issue_comment(issue['id'], comment)
+    
+                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
 
 
 def notify_missing_timespent():
