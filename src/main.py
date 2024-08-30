@@ -45,7 +45,7 @@ def notify_missing_status():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
                 
 def notify_missing_duedate():
     if config.is_enterprise:
@@ -88,7 +88,7 @@ def notify_missing_duedate():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
 
 def notify_missing_timespent():
     if config.is_enterprise:
@@ -131,7 +131,7 @@ def notify_missing_timespent():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
           
 def notify_missing_release():
     if config.is_enterprise:
@@ -174,7 +174,7 @@ def notify_missing_release():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
       
 def notify_missing_estimate():
     if config.is_enterprise:
@@ -217,7 +217,7 @@ def notify_missing_estimate():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
                 
 def notify_missing_priority():
     if config.is_enterprise:
@@ -260,7 +260,7 @@ def notify_missing_priority():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
       
 def notify_missing_size():
     if config.is_enterprise:
@@ -303,7 +303,7 @@ def notify_missing_size():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
                 
 def notify_missing_week():
     if config.is_enterprise:
@@ -346,7 +346,7 @@ def notify_missing_week():
                 if not config.dry_run:
                     # Add the comment to the issue
                     graphql.add_issue_comment(issue['id'], comment)    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                logger.info(f'Comment added to issue #{issue_content.get("number")}')
     
 def main():
     logger.info('Process started...')
