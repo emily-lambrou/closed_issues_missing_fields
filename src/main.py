@@ -1,4 +1,5 @@
 from logger import logger
+import requests
 import config
 import utils
 import graphql
