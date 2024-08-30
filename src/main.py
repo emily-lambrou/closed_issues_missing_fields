@@ -25,50 +25,27 @@ def notify_missing_status():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-        
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
-
-        
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue_id, comment)
-    
-                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue_id})')
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
                 
 def notify_missing_duedate():
     if config.is_enterprise:
@@ -91,50 +68,27 @@ def notify_missing_duedate():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):
-
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
 
 def notify_missing_timespent():
     if config.is_enterprise:
@@ -157,48 +111,27 @@ def notify_missing_timespent():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
           
 def notify_missing_release():
     if config.is_enterprise:
@@ -221,49 +154,27 @@ def notify_missing_release():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-          
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
       
 def notify_missing_estimate():
     if config.is_enterprise:
@@ -286,49 +197,28 @@ def notify_missing_estimate():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-          
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                
 def notify_missing_priority():
     if config.is_enterprise:
         issues = graphql.get_project_issues_priority(
@@ -350,49 +240,27 @@ def notify_missing_priority():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
-
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-          
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
       
 def notify_missing_size():
     if config.is_enterprise:
@@ -415,49 +283,28 @@ def notify_missing_size():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-        # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-        
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
-
-
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
+                
 def notify_missing_week():
     if config.is_enterprise:
         issues = graphql.get_project_issues_week(
@@ -479,47 +326,27 @@ def notify_missing_week():
         logger.info('No issues has been found')
         return
 
-    # Loop through issues
-    for issue in issues:
-        # Skip the issues if they are opened
-        if issue.get('state') == 'OPEN':
-            continue
+    for projectItem in issues:
+        issue = projectItem['content']
 
-        # Ensure 'content' is present
-        issue_content = issue.get('content', {})
-        if not issue_content:
-            logger.warning(f'Issue object does not contain "content": {issue}')
-            continue
-            
-         # Ensure 'id' is present in issue content
-        issue_id = issue_content.get('id')
-        if not issue_id:
-            logger.warning(f'Issue content does not contain "id": {issue_content}')
-            continue
+        # Get the list of assignees
+        assignees = issue['assignees']['nodes']
 
-        # Get the project item from issue
-        project_items = issue.get('projectItems', {}).get('nodes', [])
-        logger.debug(f'Project items for issue {issue_id}: {project_items}')
-
-        if not project_items:
-            logger.warning(f'No project items found for issue {issue_id}')
-            continue
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
         # Check if the comment already exists
-        if not utils.check_comment_exists(issue_id, comment_text):   
+        if not utils.check_comment_exists(issue['id'], comment_text):
             if config.notification_type == 'comment':
                 # Prepare the notification content
                 comment = utils.prepare_missing_fields_comment(
-                    issue=issue_content,
-                    assignees=issue_content.get('assignees', {}).get('nodes', []), 
+                    issue=issue,
+                    assignees=assignees, 
                 )
     
                 if not config.dry_run:
                     # Add the comment to the issue
-                    graphql.add_issue_comment(issue['id'], comment)
-    
-                logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
+                    graphql.add_issue_comment(issue['id'], comment)    
+                logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue['id']})')
     
 def main():
     logger.info('Process started...')
