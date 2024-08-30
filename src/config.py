@@ -20,7 +20,6 @@ release_field_name = os.environ['INPUT_RELEASE_FIELD_NAME']
 estimate_field_name = os.environ['INPUT_ESTIMATE_FIELD_NAME']
 priority_field_name = os.environ['INPUT_PRIORITY_FIELD_NAME']
 size_field_name = os.environ['INPUT_SIZE_FIELD_NAME']
-week_field_name = os.environ['INPUT_WEEK_FIELD_NAME']
 
 notification_type = os.environ['INPUT_NOTIFICATION_TYPE']
 
