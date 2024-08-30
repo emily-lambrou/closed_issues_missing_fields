@@ -224,7 +224,7 @@ def get_project_issues_timespent(owner, owner_type, project_number, timespent_fi
                 nodes {{
                   id
                   fieldValueByName(name: $timespent) {{
-                    ... on ProjectV2ItemTextValue {{
+                    ... on ProjectV2ItemFieldTextValue {{
                       id
                       text
                     }}
@@ -433,7 +433,7 @@ def get_project_issues_estimate(owner, owner_type, project_number, estimate_fiel
                 nodes {{
                   id
                   fieldValueByName(name: $estimate) {{
-                    ... on ProjectV2ItemTextValue {{
+                    ... on ProjectV2ItemFieldTextValue {{
                       id
                       text
                     }}
