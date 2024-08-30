@@ -746,10 +746,8 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
                 nodes {{
                   id
                   fieldValueByName(name: $week) {{
-                    ... on ProjectV2ItemIterationValue {{
+                    ... on ProjectV2IterationFieldValue {{
                       title
-                      startDate
-                      endDate
                     }}
                   }}
                   content {{
@@ -924,10 +922,3 @@ def get_issue_comments(issue_id):
     except requests.RequestException as e:
         logging.error(f"Request error: {e}")
         return []
-
-
-
-
-
-
-
