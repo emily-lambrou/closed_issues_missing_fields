@@ -14,7 +14,7 @@ def prepare_missing_fields_comment(issue: dict, assignees: dict):
     else:
         logger.info(f'No assignees found for issue #{issue["number"]}')
 
-    comment += f'Kindly set the `Due Date` for this issue.'
+    comment += f'Kindly set the `missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week.'
     logger.info(f'Issue {issue["title"]} | {comment}')
 
     return comment
