@@ -1,6 +1,8 @@
 from pprint import pprint
 import requests
+import logging
 import config
+import utils
 
 def get_project_issues_status(owner, owner_type, project_number, status_field_name, filters=None, after=None, issues=None):
     query = f"""
