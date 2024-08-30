@@ -1,5 +1,5 @@
 import smtplib
-import html2text
+import graphql
 import config
 
 def prepare_missing_duedate_comment(issue: dict, assignees: dict):
@@ -18,6 +18,15 @@ def prepare_missing_duedate_comment(issue: dict, assignees: dict):
     logger.info(f'Issue {issue["title"]} | {comment}')
 
     return comment
+
+def check_comment_exists(issue_id, comment_text):
+    """Check if the comment already exists on the issue."""
+    comments = graphql.get_issue_comments(issue_id)
+    for comment in comments:
+        if comment_text in comment.get('body', ''):
+            return True
+    return False
+
 
 
 
