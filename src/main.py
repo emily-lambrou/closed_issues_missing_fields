@@ -19,6 +19,7 @@ def notify_missing_status():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -56,6 +57,7 @@ def notify_missing_duedate():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -95,6 +97,7 @@ def notify_missing_timespent():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -132,6 +135,7 @@ def notify_missing_release():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -170,6 +174,7 @@ def notify_missing_estimate():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -207,6 +212,7 @@ def notify_missing_priority():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -246,6 +252,7 @@ def notify_missing_size():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
@@ -284,6 +291,7 @@ def notify_missing_week():
 
     for projectItem in issues:
         issue = projectItem['content']
+        issue_id = issue.get('id')
 
         # Get the list of assignees
         assignees = issue['assignees']['nodes']
