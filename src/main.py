@@ -25,7 +25,7 @@ def notify_missing_status():
         logger.info('No issues has been found')
         return
 
-     # Loop through issues
+    # Loop through issues
     for issue in issues:
         # Skip the issues if they are opened
         if issue.get('state') == 'OPEN':
@@ -45,9 +45,13 @@ def notify_missing_status():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+        
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
+
+        
 
         comment_text = f"Kindly set the missing required fields for the project: Status, Due Date, Time Spent, Release, Estimate, Priority, Size, Week."
         
@@ -107,6 +111,8 @@ def notify_missing_duedate():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -171,6 +177,8 @@ def notify_missing_timespent():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -233,6 +241,8 @@ def notify_missing_release():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -296,6 +306,8 @@ def notify_missing_estimate():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -358,6 +370,8 @@ def notify_missing_priority():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -413,7 +427,7 @@ def notify_missing_size():
             logger.warning(f'Issue object does not contain "content": {issue}')
             continue
             
-         # Ensure 'id' is present in issue content
+        # Ensure 'id' is present in issue content
         issue_id = issue_content.get('id')
         if not issue_id:
             logger.warning(f'Issue content does not contain "id": {issue_content}')
@@ -421,6 +435,8 @@ def notify_missing_size():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+        
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
@@ -483,6 +499,8 @@ def notify_missing_week():
 
         # Get the project item from issue
         project_items = issue.get('projectItems', {}).get('nodes', [])
+        logger.debug(f'Project items for issue {issue_id}: {project_items}')
+
         if not project_items:
             logger.warning(f'No project items found for issue {issue_id}')
             continue
