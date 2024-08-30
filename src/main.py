@@ -13,7 +13,7 @@ def notify_missing_status():
             status_field_name=config.status_field_name,
             filters={'empty_status': True, 'closed_only': True}
         )
-     else:
+    else:
         # Get the issues
         issues = graphql.get_repo_issues(
             owner=config.repository_owner,
