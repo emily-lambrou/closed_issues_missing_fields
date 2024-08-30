@@ -619,7 +619,7 @@ def get_project_issues_priority(owner, owner_type, project_number, priority_fiel
         )
 
     return issues
-  except requests.RequestException as e:
+except requests.RequestException as e:
     logging.error(f"Request error: {e}")
     return
        
