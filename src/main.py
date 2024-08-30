@@ -5,13 +5,20 @@ import utils
 import graphql
 
 def notify_missing_status():
-    issues = graphql.get_project_issues_status(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        status_field_name=config.status_field_name,
-        filters={'empty_status': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_status(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            status_field_name=config.status_field_name,
+            filters={'empty_status': True, 'closed_only': True}
+        )
+     else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -60,14 +67,21 @@ def notify_missing_status():
                 logger.info(f'Comment added to issue #{issue_content.get("number")} ({issue_id})')
                 
 def notify_missing_duedate():
-    issues = graphql.get_project_issues_duedate(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        duedate_field_name=config.duedate_field_name,
-        filters={'empty_duedate': True, 'closed_only': True}
-    )
-
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_duedate(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            duedate_field_name=config.duedate_field_name,
+            filters={'empty_duedate': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
+        
     # Check if there are issues available
     if not issues:
         logger.info('No issues has been found')
@@ -117,13 +131,20 @@ def notify_missing_duedate():
 
 
 def notify_missing_timespent():
-    issues = graphql.get_project_issues_timespent(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        timespent_field_name=config.timespent_field_name,
-        filters={'empty_timespent': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_timespent(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            timespent_field_name=config.timespent_field_name,
+            filters={'empty_timespent': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -172,13 +193,20 @@ def notify_missing_timespent():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
 def notify_missing_release():
-    issues = graphql.get_project_issues_release(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        release_field_name=config.release_field_name,
-        filters={'empty_release': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_release(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            release_field_name=config.release_field_name,
+            filters={'empty_release': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -228,13 +256,20 @@ def notify_missing_release():
           
       
 def notify_missing_estimate():
-    issues = graphql.get_project_issues_estimate(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        estimate_field_name=config.estimate_field_name,
-        filters={'empty_estimate': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_estimate(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            estimate_field_name=config.estimate_field_name,
+            filters={'empty_estimate': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -283,13 +318,20 @@ def notify_missing_estimate():
                 logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]})')
           
 def notify_missing_priority():
-    issues = graphql.get_project_issues_priority(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        priority_field_name=config.priority_field_name,
-        filters={'empty_priority': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_priority(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            priority_field_name=config.priority_field_name,
+            filters={'empty_priority': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -339,13 +381,20 @@ def notify_missing_priority():
           
       
 def notify_missing_size():
-    issues = graphql.get_project_issues_size(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        size_field_name=config.size_field_name,
-        filters={'empty_size': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_size(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            size_field_name=config.size_field_name,
+            filters={'empty_size': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
@@ -394,13 +443,20 @@ def notify_missing_size():
 
 
 def notify_missing_week():
-    issues = graphql.get_project_issues_week(
-        owner=config.repository_owner,
-        owner_type=config.repository_owner_type,
-        project_number=config.project_number,
-        week_field_name=config.week_field_name,
-        filters={'empty_week': True, 'closed_only': True}
-    )
+    if config.is_enterprise:
+        issues = graphql.get_project_issues_week(
+            owner=config.repository_owner,
+            owner_type=config.repository_owner_type,
+            project_number=config.project_number,
+            week_field_name=config.week_field_name,
+            filters={'empty_week': True, 'closed_only': True}
+        )
+    else:
+        # Get the issues
+        issues = graphql.get_repo_issues(
+            owner=config.repository_owner,
+            repository=config.repository_name
+        )
 
     # Check if there are issues available
     if not issues:
