@@ -4,6 +4,82 @@ import logging
 import config
 import utils
 
+def get_repo_closed_issues(owner, repository, after=None, issues=None):
+    query = """
+    query GetRepoClosedIssues($owner: String!, $repo: String!, $after: String) {
+          repository(owner: $owner, name: $repo) {
+            issues(first: 100, after: $after, states: [CLOSED]) {
+              nodes {
+                id
+                title
+                number
+                url
+                assignees(first:100) {
+                  nodes {
+                    name
+                    email
+                    login
+                  }
+                }
+                projectItems(first: 10) {
+                  nodes {
+                    project {
+                      number
+                      title
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                endCursor
+                hasNextPage
+                hasPreviousPage
+              }
+              totalCount
+            }
+          }
+        }
+    """
+
+    variables = {
+        'owner': owner,
+        'repo': repository,
+        'after': after
+    }
+
+     response = requests.post(
+        config.api_endpoint,
+        json={"query": query, "variables": variables},
+        headers={"Authorization": f"Bearer {config.gh_token}"}
+    )
+
+    data = response.json()
+
+    if data.get('errors'):
+        print(data.get('errors'))
+   
+    # Add debug print statement
+    pprint(data)
+
+    repository_data = data.get('data', {}).get('repository', {})
+    issues_data = repository_data.get('issues', {})
+    pageinfo = issues_data.get('pageInfo', {})
+    nodes = issues_data.get('nodes', [])
+
+    if issues is None:
+        issues = []
+    issues = issues + nodes
+    if pageinfo.get('hasNextPage'):
+        return get_repo_issues(
+            owner=owner,
+            repository=repository,
+            after=pageinfo.get('endCursor'),
+            issues=issues,
+            status_field_name=status_field_name
+        )
+
+    return issues
+
 def get_project_issues_status(owner, owner_type, project_number, status_field_name, filters=None, after=None, issues=None):
     query = f"""
     query GetProjectIssues($owner: String!, $projectNumber: Int!, $status: String!, $after: String)  {{
