@@ -736,7 +736,7 @@ def get_project_issues_size(owner, owner_type, project_number, size_field_name, 
 
 def get_project_issues_week(owner, owner_type, project_number, week_field_name, filters=None, after=None, issues=None):
     query = f"""
-    query GetProjectIssues($owner: String!, $projectNumber: Int!, $size: String!, $after: String)  {{
+    query GetProjectIssues($owner: String!, $projectNumber: Int!, $week: String!, $after: String)  {{
           {owner_type}(login: $owner) {{
             projectV2(number: $projectNumber) {{
               id
@@ -748,6 +748,8 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
                   fieldValueByName(name: $week) {{
                     ... on ProjectV2ItemFieldValueIteration  {{
                       title
+                      startDate
+                      endDate
                     }}
                   }}
                   content {{
@@ -813,7 +815,7 @@ def get_project_issues_week(owner, owner_type, project_number, week_field_name, 
             for node in nodes:
                 if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
                     continue
-                if filters.get('empty_size') and node['fieldValueByName']:
+                if filters.get('empty_week') and node['fieldValueByName']:
                     continue
                 filtered_issues.append(node)
     
