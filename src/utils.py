@@ -1,6 +1,7 @@
 import smtplib
 import graphql
 import config
+from logger import logger
 
 def prepare_missing_fields_comment(issue: dict, assignees: dict):
     """
