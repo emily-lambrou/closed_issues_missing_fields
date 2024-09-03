@@ -690,7 +690,7 @@ def get_project_issues_priority(owner, owner_type, project_number, priority_fiel
         issues = issues + nodes
     
         if pageinfo.get('hasNextPage'):
-            return get_project_issues_status_priority(
+            return get_project_issues_priority(
                 owner=owner,
                 owner_type=owner_type,
                 project_number=project_number,
