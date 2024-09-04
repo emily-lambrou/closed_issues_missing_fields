@@ -64,8 +64,8 @@ jobs:
         uses: actions/checkout@v3
 
 
-      # Check for status changes
-      - name: Check for status changes
+      # Check for missing fields
+      - name: Check for missing fields
         uses: emily-lambrou/closed_issues_without_required_info@v1.3
         with:
           dry_run: ${{ vars.DRY_RUN }}           
