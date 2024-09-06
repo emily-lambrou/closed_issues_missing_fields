@@ -944,7 +944,7 @@ def add_issue_comment(issueId, comment):
         logging.error(f"Request error: {e}")
         return {}
 
-def get_issue_comments(issue_id):
+def get_issue_comments(issue_id, after=None):
     query = """
     query GetIssueComments($issueId: ID!) {
         node(id: $issueId) {
@@ -990,7 +990,7 @@ def get_issue_comments(issue_id):
         # Handle pagination if there are more comments
         pageinfo = comments_data.get('pageInfo', {})
         if pageinfo.get('hasNextPage'):
-            next_page_comments = get_issue_comments(issue_id, after=pageinfo.get('endCursor'))
+            next_page_comments = get_issue_comments(issue_id)
             comments.extend(next_page_comments)
 
         return comments
