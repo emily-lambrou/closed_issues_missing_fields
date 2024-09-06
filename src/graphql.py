@@ -990,7 +990,7 @@ def get_issue_comments(issue_id, after=None):
         # Handle pagination if there are more comments
         pageinfo = comments_data.get('pageInfo', {})
         if pageinfo.get('hasNextPage'):
-            next_page_comments = get_issue_comments(issue_id)
+            next_page_comments = get_issue_comments(issue_id, after=pageinfo.get('endCursor'))
             comments.extend(next_page_comments)
 
         return comments
