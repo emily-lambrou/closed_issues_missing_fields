@@ -944,7 +944,7 @@ def add_issue_comment(issueId, comment):
         logging.error(f"Request error: {e}")
         return {}
 
-def get_issue_comments(issue_id, after=None):
+def get_issue_comments(issue_id):
     query = """
     query GetIssueComments($issueId: ID!) {
         node(id: $issueId) {
