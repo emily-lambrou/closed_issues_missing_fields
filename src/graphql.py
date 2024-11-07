@@ -299,7 +299,7 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
               items(first: 100,after: $after) {{
                 nodes {{
                   id
-                  fieldValueByName(name: $timespent) {{
+                  fieldValueByName(name: $timespentold) {{
                     ... on ProjectV2ItemFieldTextValue {{
                       id
                       text
@@ -614,7 +614,7 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
               items(first: 100,after: $after) {{
                 nodes {{
                   id
-                  fieldValueByName(name: $estimate) {{
+                  fieldValueByName(name: $estimateold) {{
                     ... on ProjectV2ItemFieldTextValue {{
                       id
                       text
