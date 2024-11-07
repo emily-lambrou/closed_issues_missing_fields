@@ -367,11 +367,17 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
         if filters:
             filtered_issues = []
             for node in nodes:
-                # Check if 'Time Spent OLD(DO NOT SET)' field is missing
-                timespentold_field = node.get('fieldValueByName', {}).get(timespentold_field_name)
+                # Safely access the 'fieldValueByName' and check for 'timespentold'
+                field_value = node.get('fieldValueByName', {})
+                if not field_value:
+                    logging.info(f"Issue #{node['content']['number']} does not have 'Time Spent OLD' field. Skipping.")
+                    continue
+
+                # Check if the field contains the required text value
+                timespentold_field = field_value.get(timespentold_field_name)
                 if not timespentold_field or not timespentold_field.get('text'):
-                    logging.info(f"Issue #{node['content']['number']} has missing 'Time Spent OLD(DO NOT SET)' field. Skipping.")
-                    continue  # Skip this issue if 'Time Spent OLD(DO NOT SET)' is missing
+                    logging.info(f"Issue #{node['content']['number']} has missing 'Time Spent OLD' field. Skipping.")
+                    continue  # Skip this issue if the 'Time Spent OLD' field is missing
 
                 # Further filtering based on 'closed_only' and 'empty_timespentold'
                 if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
@@ -397,8 +403,8 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
     
         return issues
     except requests.RequestException as e:
-            logging.error(f"Request error: {e}")
-            return []
+        logging.error(f"Request error: {e}")
+        return []
 
 def get_project_issues_timespent(owner, owner_type, project_number, timespent_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -609,7 +615,6 @@ def get_project_issues_release(owner, owner_type, project_number, release_field_
         logging.error(f"Request error: {e}")
         return []
 
-
 def get_project_issues_estimateold(owner, owner_type, project_number, estimateold_field_name, filters=None, after=None, issues=None):
     query = f"""
     query GetProjectIssues($owner: String!, $projectNumber: Int!, $estimateold: String!, $after: String) {{
@@ -689,11 +694,17 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
         if filters:
             filtered_issues = []
             for node in nodes:
-                # Check if 'Estimate OLD(DO NOT SET)' field is missing
-                estimateold_field = node.get('fieldValueByName', {}).get(estimateold_field_name)
+                # Safely access the 'fieldValueByName' and check for 'estimateold'
+                field_value = node.get('fieldValueByName', {})
+                if not field_value:
+                    logging.info(f"Issue #{node['content']['number']} does not have 'Estimate OLD' field. Skipping.")
+                    continue
+
+                # Check if the field contains the required text value
+                estimateold_field = field_value.get(estimateold_field_name)
                 if not estimateold_field or not estimateold_field.get('text'):
-                    logging.info(f"Issue #{node['content']['number']} has missing 'Estimate OLD(DO NOT SET)' field. Skipping.")
-                    continue  # Skip this issue if 'Estimate OLD(DO NOT SET)' is missing
+                    logging.info(f"Issue #{node['content']['number']} has missing 'Estimate OLD' field. Skipping.")
+                    continue  # Skip this issue if the 'Estimate OLD' field is missing
 
                 # Further filtering based on 'closed_only' and 'empty_estimateold'
                 if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
@@ -721,6 +732,7 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
     except requests.RequestException as e:
         logging.error(f"Request error: {e}")
         return []
+
 
 def get_project_issues_estimate(owner, owner_type, project_number, estimate_field_name, filters=None, after=None, issues=None):
     query = f"""
