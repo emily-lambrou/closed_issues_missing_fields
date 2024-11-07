@@ -290,13 +290,13 @@ def get_project_issues_duedate(owner, owner_type, project_number, duedate_field_
 
 def get_project_issues_timespentold(owner, owner_type, project_number, timespentold_field_name, filters=None, after=None, issues=None):
     query = f"""
-    query GetProjectIssues($owner: String!, $projectNumber: Int!, $timespentold: String!, $after: String)  {{
+    query GetProjectIssues($owner: String!, $projectNumber: Int!, $timespentold: String!, $after: String) {{
           {owner_type}(login: $owner) {{
             projectV2(number: $projectNumber) {{
               id
               title
               number
-              items(first: 100,after: $after) {{
+              items(first: 100, after: $after) {{
                 nodes {{
                   id
                   fieldValueByName(name: $timespentold) {{
@@ -312,7 +312,7 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
                       number
                       state
                       url
-                      assignees(first:20) {{
+                      assignees(first: 20) {{
                         nodes {{
                           name
                           email
@@ -323,11 +323,11 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
                   }}
                 }}
                 pageInfo {{
-                endCursor
-                hasNextPage
-                hasPreviousPage
-              }}
-              totalCount
+                  endCursor
+                  hasNextPage
+                  hasPreviousPage
+                }}
+                totalCount
               }}
             }}
           }}
@@ -363,9 +363,17 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
         if issues is None:
             issues = []
 
+        # Filter issues based on conditions
         if filters:
             filtered_issues = []
             for node in nodes:
+                # Check if 'Time Spent OLD(DO NOT SET)' field is missing
+                timespentold_field = node.get('fieldValueByName', {}).get(timespentold_field_name)
+                if not timespentold_field or not timespentold_field.get('text'):
+                    logging.info(f"Issue #{node['content']['number']} has missing 'Time Spent OLD(DO NOT SET)' field. Skipping.")
+                    continue  # Skip this issue if 'Time Spent OLD(DO NOT SET)' is missing
+
+                # Further filtering based on 'closed_only' and 'empty_timespentold'
                 if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
                     continue
                 if filters.get('empty_timespentold') and node['fieldValueByName']:
@@ -391,7 +399,6 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
     except requests.RequestException as e:
             logging.error(f"Request error: {e}")
             return []
-
 
 def get_project_issues_timespent(owner, owner_type, project_number, timespent_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -605,13 +612,13 @@ def get_project_issues_release(owner, owner_type, project_number, release_field_
 
 def get_project_issues_estimateold(owner, owner_type, project_number, estimateold_field_name, filters=None, after=None, issues=None):
     query = f"""
-    query GetProjectIssues($owner: String!, $projectNumber: Int!, $estimateold: String!, $after: String)  {{
+    query GetProjectIssues($owner: String!, $projectNumber: Int!, $estimateold: String!, $after: String) {{
           {owner_type}(login: $owner) {{
             projectV2(number: $projectNumber) {{
               id
               title
               number
-              items(first: 100,after: $after) {{
+              items(first: 100, after: $after) {{
                 nodes {{
                   id
                   fieldValueByName(name: $estimateold) {{
@@ -627,7 +634,7 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
                       number
                       state
                       url
-                      assignees(first:20) {{
+                      assignees(first: 20) {{
                         nodes {{
                           name
                           email
@@ -638,11 +645,11 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
                   }}
                 }}
                 pageInfo {{
-                endCursor
-                hasNextPage
-                hasPreviousPage
-              }}
-              totalCount
+                  endCursor
+                  hasNextPage
+                  hasPreviousPage
+                }}
+                totalCount
               }}
             }}
           }}
@@ -678,9 +685,17 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
         if issues is None:
             issues = []
 
+        # Filter issues based on conditions
         if filters:
             filtered_issues = []
             for node in nodes:
+                # Check if 'Estimate OLD(DO NOT SET)' field is missing
+                estimateold_field = node.get('fieldValueByName', {}).get(estimateold_field_name)
+                if not estimateold_field or not estimateold_field.get('text'):
+                    logging.info(f"Issue #{node['content']['number']} has missing 'Estimate OLD(DO NOT SET)' field. Skipping.")
+                    continue  # Skip this issue if 'Estimate OLD(DO NOT SET)' is missing
+
+                # Further filtering based on 'closed_only' and 'empty_estimateold'
                 if filters.get('closed_only') and node['content'].get('state') != 'CLOSED':
                     continue
                 if filters.get('empty_estimateold') and node['fieldValueByName']:
@@ -706,7 +721,6 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
     except requests.RequestException as e:
         logging.error(f"Request error: {e}")
         return []
-
 
 def get_project_issues_estimate(owner, owner_type, project_number, estimate_field_name, filters=None, after=None, issues=None):
     query = f"""
