@@ -455,8 +455,10 @@ def main():
 
     notify_missing_status()
     notify_missing_duedate()
+    notify_missing_timespentold()
     notify_missing_timespent()
     notify_missing_release()
+    notify_missing_estimateold()
     notify_missing_estimate()
     notify_missing_priority()
     notify_missing_size()
