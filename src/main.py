@@ -226,7 +226,6 @@ def notify_missing_release():
                 logger.info(f'Comment added to issue {issue_id}')
 
 
-
 def notify_missing_estimateold():
     if config.is_enterprise:
         issues = graphql.get_project_issues_estimateold(
