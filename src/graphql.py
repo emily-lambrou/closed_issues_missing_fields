@@ -371,19 +371,16 @@ def get_project_issues_timespentold(owner, owner_type, project_number, timespent
                 content = node.get('content', {})
                 issue_number = content.get('number')
                 if issue_number is None:
-                    logging.info("Skipping node without a valid issue number.")
                     continue
 
                 # Safely access the 'fieldValueByName' and check for 'timespentold'
                 field_value = node.get('fieldValueByName', {})
                 if not field_value:
-                    logging.info(f"Issue #{issue_number} does not have 'Time Spent OLD' field. Skipping.")
                     continue
 
                 # Check if the field contains the required text value
                 timespentold_field = field_value.get(timespentold_field_name)
                 if not timespentold_field or not timespentold_field.get('text'):
-                    logging.info(f"Issue #{issue_number} has missing 'Time Spent OLD' field. Skipping.")
                     continue  # Skip this issue if the 'Time Spent OLD' field is missing
 
                 # Further filtering based on 'closed_only' and 'empty_timespentold'
@@ -706,19 +703,16 @@ def get_project_issues_estimateold(owner, owner_type, project_number, estimateol
                 content = node.get('content', {})
                 issue_number = content.get('number')
                 if issue_number is None:
-                    logging.info("Skipping node without a valid issue number.")
                     continue
 
                 # Safely access the 'fieldValueByName' and check for 'estimateold'
                 field_value = node.get('fieldValueByName', {})
                 if not field_value:
-                    logging.info(f"Issue #{issue_number} does not have 'Estimate OLD' field. Skipping.")
                     continue
 
                 # Check if the field contains the required text value
                 estimateold_field = field_value.get(estimateold_field_name)
                 if not estimateold_field or not estimateold_field.get('text'):
-                    logging.info(f"Issue #{issue_number} has missing 'Estimate OLD' field. Skipping.")
                     continue  # Skip this issue if the 'Estimate OLD' field is missing
 
                 # Further filtering based on 'closed_only' and 'empty_estimateold'
