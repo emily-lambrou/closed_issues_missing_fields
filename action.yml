@@ -23,7 +23,7 @@ inputs:
     required: true
     default: 'Due Date'
   timespentold_field_name:
-    description: "The field name for the time spent"
+    description: "The field name for the old time spent field"
     required: true
     default: 'Time Spent OLD(DO NOT SET)'
   timespent_field_name:
@@ -35,7 +35,7 @@ inputs:
     required: true
     default: 'Release'
   estimateold_field_name:
-    description: "The field name for the estimate"
+    description: "The field name for the old estimate field"
     required: true
     default: 'Estimate OLD(DO NOT SET)'
   estimate_field_name:
