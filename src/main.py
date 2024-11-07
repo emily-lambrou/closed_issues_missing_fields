@@ -368,8 +368,6 @@ def main():
     notify_missing_estimate()
     notify_missing_priority()
     notify_missing_size()
-    notify_missing_week()
-  
 
 if __name__ == "__main__":
     main()
