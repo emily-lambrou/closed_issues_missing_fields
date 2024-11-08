@@ -288,129 +288,6 @@ def get_project_issues_duedate(owner, owner_type, project_number, duedate_field_
         logging.error(f"Request error: {e}")
         return []
 
-def get_project_issues_timespentold(owner, owner_type, project_number, timespentold_field_name, filters=None, after=None, issues=None):
-    query = f"""
-    query GetProjectIssues($owner: String!, $projectNumber: Int!, $timespentold: String!, $after: String) {{
-          {owner_type}(login: $owner) {{
-            projectV2(number: $projectNumber) {{
-              id
-              title
-              number
-              items(first: 100, after: $after) {{
-                nodes {{
-                  id
-                  fieldValueByName(name: $timespentold) {{
-                    ... on ProjectV2ItemFieldTextValue {{
-                      id
-                      text
-                    }}
-                  }}
-                  content {{
-                    ... on Issue {{
-                      id
-                      title
-                      number
-                      state
-                      url
-                      assignees(first: 20) {{
-                        nodes {{
-                          name
-                          email
-                          login
-                        }}
-                      }}
-                    }}
-                  }}
-                }}
-                pageInfo {{
-                  endCursor
-                  hasNextPage
-                  hasPreviousPage
-                }}
-                totalCount
-              }}
-            }}
-          }}
-        }}
-    """
-
-    variables = {
-        'owner': owner,
-        'projectNumber': project_number,
-        'timespentold': timespentold_field_name,
-        'after': after
-    }
-
-    try:
-        response = requests.post(
-            config.api_endpoint,
-            json={"query": query, "variables": variables},
-            headers={"Authorization": f"Bearer {config.gh_token}"}
-        )
-    
-        data = response.json()
-    
-        if 'errors' in data:
-            logging.error(f"GraphQL query errors: {data['errors']}")
-            return []
-          
-        owner_data = data.get('data', {}).get(owner_type, {})
-        project_data = owner_data.get('projectV2', {})
-        items_data = project_data.get('items', {})
-        pageinfo = items_data.get('pageInfo', {})
-        nodes = items_data.get('nodes', [])
-    
-        if issues is None:
-            issues = []
-
-        # Filter issues based on conditions
-        if filters:
-            filtered_issues = []
-            for node in nodes:
-                # Check if content exists and includes a valid issue number
-                content = node.get('content', {})
-                issue_number = content.get('number')
-                if issue_number is None:
-                    continue
-
-                # Safely access the 'fieldValueByName' and check for 'timespentold'
-                field_value = node.get('fieldValueByName', {})
-                if not field_value:
-                    continue
-
-                # Check if the field contains the required text value
-                timespentold_field = field_value.get(timespentold_field_name)
-                if not timespentold_field or not timespentold_field.get('text'):
-                    continue  # Skip this issue if the 'Time Spent OLD' field is missing
-
-                # Further filtering based on 'closed_only' and 'empty_timespentold'
-                if filters.get('closed_only') and content.get('state') != 'CLOSED':
-                    continue
-                if filters.get('empty_timespentold') and node['fieldValueByName']:
-                    continue
-                filtered_issues.append(node)
-    
-            nodes = filtered_issues
-    
-        issues = issues + nodes
-    
-        if pageinfo.get('hasNextPage'):
-            return get_project_issues_timespentold(
-                owner=owner,
-                owner_type=owner_type,
-                project_number=project_number,
-                after=pageinfo.get('endCursor'),
-                filters=filters,
-                issues=issues,
-                timespentold_field_name=timespentold_field_name
-            )
-    
-        return issues
-    except requests.RequestException as e:
-        logging.error(f"Request error: {e}")
-        return []
-
-
 def get_project_issues_timespent(owner, owner_type, project_number, timespent_field_name, filters=None, after=None, issues=None):
     query = f"""
     query GetProjectIssues($owner: String!, $projectNumber: Int!, $timespent: String!, $after: String)  {{
@@ -423,9 +300,9 @@ def get_project_issues_timespent(owner, owner_type, project_number, timespent_fi
                 nodes {{
                   id
                   fieldValueByName(name: $timespent) {{
-                    ... on ProjectV2ItemFieldSingleSelectValue {{
+                    ... on ProjectV2ItemFieldTextValue {{
                       id
-                      name
+                      text
                     }}
                   }}
                   content {{
@@ -514,7 +391,6 @@ def get_project_issues_timespent(owner, owner_type, project_number, timespent_fi
     except requests.RequestException as e:
             logging.error(f"Request error: {e}")
             return []
-
 
 def get_project_issues_release(owner, owner_type, project_number, release_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -620,127 +496,6 @@ def get_project_issues_release(owner, owner_type, project_number, release_field_
         logging.error(f"Request error: {e}")
         return []
 
-def get_project_issues_estimateold(owner, owner_type, project_number, estimateold_field_name, filters=None, after=None, issues=None):
-    query = f"""
-    query GetProjectIssues($owner: String!, $projectNumber: Int!, $estimateold: String!, $after: String) {{
-          {owner_type}(login: $owner) {{
-            projectV2(number: $projectNumber) {{
-              id
-              title
-              number
-              items(first: 100, after: $after) {{
-                nodes {{
-                  id
-                  fieldValueByName(name: $estimateold) {{
-                    ... on ProjectV2ItemFieldTextValue {{
-                      id
-                      text
-                    }}
-                  }}
-                  content {{
-                    ... on Issue {{
-                      id
-                      title
-                      number
-                      state
-                      url
-                      assignees(first: 20) {{
-                        nodes {{
-                          name
-                          email
-                          login
-                        }}
-                      }}
-                    }}
-                  }}
-                }}
-                pageInfo {{
-                  endCursor
-                  hasNextPage
-                  hasPreviousPage
-                }}
-                totalCount
-              }}
-            }}
-          }}
-        }}
-    """
-
-    variables = {
-        'owner': owner,
-        'projectNumber': project_number,
-        'estimateold': estimateold_field_name,
-        'after': after
-    }
-
-    try:
-        response = requests.post(
-            config.api_endpoint,
-            json={"query": query, "variables": variables},
-            headers={"Authorization": f"Bearer {config.gh_token}"}
-        )
-    
-        data = response.json()
-    
-        if 'errors' in data:
-            logging.error(f"GraphQL query errors: {data['errors']}")
-            return []
-          
-        owner_data = data.get('data', {}).get(owner_type, {})
-        project_data = owner_data.get('projectV2', {})
-        items_data = project_data.get('items', {})
-        pageinfo = items_data.get('pageInfo', {})
-        nodes = items_data.get('nodes', [])
-    
-        if issues is None:
-            issues = []
-
-        # Filter issues based on conditions
-        if filters:
-            filtered_issues = []
-            for node in nodes:
-                # Check if content exists and includes a valid issue number
-                content = node.get('content', {})
-                issue_number = content.get('number')
-                if issue_number is None:
-                    continue
-
-                # Safely access the 'fieldValueByName' and check for 'estimateold'
-                field_value = node.get('fieldValueByName', {})
-                if not field_value:
-                    continue
-
-                # Check if the field contains the required text value
-                estimateold_field = field_value.get(estimateold_field_name)
-                if not estimateold_field or not estimateold_field.get('text'):
-                    continue  # Skip this issue if the 'Estimate OLD' field is missing
-
-                # Further filtering based on 'closed_only' and 'empty_estimateold'
-                if filters.get('closed_only') and content.get('state') != 'CLOSED':
-                    continue
-                if filters.get('empty_estimateold') and node['fieldValueByName']:
-                    continue
-                filtered_issues.append(node)
-    
-            nodes = filtered_issues
-    
-        issues = issues + nodes
-    
-        if pageinfo.get('hasNextPage'):
-            return get_project_issues_estimateold(
-                owner=owner,
-                owner_type=owner_type,
-                project_number=project_number,
-                after=pageinfo.get('endCursor'),
-                filters=filters,
-                issues=issues,
-                estimateold_field_name=estimateold_field_name
-            )
-    
-        return issues
-    except requests.RequestException as e:
-        logging.error(f"Request error: {e}")
-        return []
 
 def get_project_issues_estimate(owner, owner_type, project_number, estimate_field_name, filters=None, after=None, issues=None):
     query = f"""
@@ -754,9 +509,9 @@ def get_project_issues_estimate(owner, owner_type, project_number, estimate_fiel
                 nodes {{
                   id
                   fieldValueByName(name: $estimate) {{
-                    ... on ProjectV2ItemFieldSingleSelectValue {{
+                    ... on ProjectV2ItemFieldTextValue {{
                       id
-                      name
+                      text
                     }}
                   }}
                   content {{
