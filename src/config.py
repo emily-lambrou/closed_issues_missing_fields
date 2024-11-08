@@ -15,10 +15,8 @@ api_endpoint = os.environ.get('GITHUB_GRAPHQL_URL', 'https://github.intranet.uni
 # Field names
 status_field_name = os.environ['INPUT_STATUS_FIELD_NAME']
 duedate_field_name = os.environ['INPUT_DUEDATE_FIELD_NAME']
-timespentold_field_name = os.environ['INPUT_TIMESPENTOLD_FIELD_NAME']
 timespent_field_name = os.environ['INPUT_TIMESPENT_FIELD_NAME']
 release_field_name = os.environ['INPUT_RELEASE_FIELD_NAME']
-estimateold_field_name = os.environ['INPUT_ESTIMATEOLD_FIELD_NAME']
 estimate_field_name = os.environ['INPUT_ESTIMATE_FIELD_NAME']
 priority_field_name = os.environ['INPUT_PRIORITY_FIELD_NAME']
 size_field_name = os.environ['INPUT_SIZE_FIELD_NAME']
@@ -28,4 +26,3 @@ notification_type = os.environ['INPUT_NOTIFICATION_TYPE']
 
 if notification_type not in ['comment', 'email']:
     raise Exception(f'Unsupported notification type {notification_type}')
-
